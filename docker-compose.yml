@@ -1,0 +1,27 @@
+# Copyright VMware, Inc.
+# SPDX-License-Identifier: APACHE-2.0
+
+version: '2'
+
+services:
+  mysql:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
+      - MYSQL_DATABASE=db_empresa
+  myapp:
+    image: docker.io/bitnami/laravel:10
+    user: 1000:1000
+    ports:
+      - '8000:8000'
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USERNAME=root
+      - DB_PASSWORD=12345
+      - DB_DATABASE=db_empresa
+    volumes:
+      - '.:/app'
+      - ./sql.sql:/docker-entrypoint-initdb.d/sql.sql
+    depends_on:
+      - mysql
